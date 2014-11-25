@@ -15,65 +15,85 @@ import android.util.*;
 
 public class MainActivity extends Activity {
 
+    private int _xDelta;
+    private int _yDelta;
+    ImageView circle;
+
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView circle = (ImageView)findViewById(R.id.circle);
-        circle.setOnClickListener(l);
+        gestureDetector = new GestureDetector(this, new SingleTapConfirm());
+
+        circle = (ImageView)findViewById(R.id.circle);
         circle.setOnTouchListener(t);
 
     }
 
 
-    //RelativeLayout.LayoutParams parms;
-    //LinearLayout.LayoutParams par;
-    //float  x=0, y=0, dy=0, dx=0;
-
-    private int _xDelta;
-    private int _yDelta;
-
     View.OnTouchListener t = new View.OnTouchListener(){
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            final int X = (int) event.getRawX();
-            final int Y = (int) event.getRawY();
-            ImageView j = (ImageView)findViewById(R.id.circle);
-            switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                case MotionEvent.ACTION_DOWN:
-                    RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                    _xDelta = (int) (X - j.getTranslationX());
-                    _yDelta = (int) (Y - j.getTranslationY());
-                    break;
-                case MotionEvent.ACTION_UP:
-                    break;
-                case MotionEvent.ACTION_POINTER_DOWN:
-                    break;
-                case MotionEvent.ACTION_POINTER_UP:
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+            if (gestureDetector.onTouchEvent(event)) {
+                if(v.getId() == R.id.circle){
+                    Toast.makeText(getApplicationContext(), "Circle clicked", Toast.LENGTH_SHORT).show();
+                    //TODO: Circle got touched, add functionality for that case
+                }
+                return true;
+            } else {
+                final int X = (int) event.getRawX();
+                final int Y = (int) event.getRawY();
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_DOWN:
 
-                    j.setTranslationX(X - _xDelta);
-                    j.setTranslationY(Y - _yDelta);
-                    break;
+                        //Log.i("MAIN", "X: "+ X);
+                        //Log.i("MAIN", "Y: "+ Y);
+
+                        //oldX = X;
+                        //oldY = Y;
+
+                        //Log.i("MAIN", "translationX: "+ circle.getTranslationX());
+                        //Log.i("MAIN", "translationY: "+ circle.getTranslationY());
+
+                        _xDelta = (int) (X - circle.getTranslationX());
+                        _yDelta = (int) (Y - circle.getTranslationY());
+
+                        //Log.i("MAIN", "x: "+ _xDelta);
+                        //Log.i("MAIN", "y: "+ _yDelta);
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        break;
+                    case MotionEvent.ACTION_POINTER_UP:
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+
+                        //int diffX = oldX - X;
+                        //Log.i("MAIN", "action_move triggered: "+ diffX);
+
+                        circle.setTranslationX(X - _xDelta);
+                        circle.setTranslationY(Y - _yDelta);
+                        break;
+                }
+
+                return true;
             }
-
-            return true;
             }
     };
 
-    View.OnClickListener l = new View.OnClickListener() {
+    private class SingleTapConfirm extends GestureDetector.SimpleOnGestureListener {
 
         @Override
-        public void onClick(View v) {
-            if(v.getId() == R.id.circle){
-                Toast.makeText(getApplicationContext(), "Circle clicked", Toast.LENGTH_SHORT).show();
-            }
+        public boolean onSingleTapUp(MotionEvent event) {
+            return true;
         }
-    };
+    }
 
 
     @Override
