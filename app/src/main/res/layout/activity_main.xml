@@ -8,8 +8,52 @@
     <ImageView android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/circle"
-        android:id="@+id/circle" />
+        android:background="@drawable/circle_fb"
+        android:id="@+id/circle_wrapper" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
+
+            <ImageView android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/contact"
+                android:id="@+id/contact01"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <ImageView android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerInParent="false"
+                android:background="@drawable/contact"
+                android:id="@+id/contact02"
+                android:layout_alignTop="@+id/contact01"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <ImageView android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerInParent="false"
+                android:background="@drawable/contact"
+                android:id="@+id/contact03"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

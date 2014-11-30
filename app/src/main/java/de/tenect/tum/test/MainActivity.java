@@ -1,23 +1,27 @@
 package de.tenect.tum.test;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
+import android.app.DialogFragment;
 import android.os.Bundle;
-import android.view.*;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.*;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.util.*;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SocialChooserFragment.NoticeDialogListener {
 
     private int _xDelta;
     private int _yDelta;
-    ImageView circle;
+    ImageView circle_fb;
+
+    private static final int SOCIAL_FACEBOOK = 0;
+    private static final int SOCIAL_TWITTER = 1;
+    private static final int SOCIAL_LINKEDIN = 2;
+
+    SocialContainer socialFB;
+
 
     private GestureDetector gestureDetector;
 
@@ -28,10 +32,12 @@ public class MainActivity extends Activity {
 
         gestureDetector = new GestureDetector(this, new SingleTapConfirm());
 
-        circle = (ImageView)findViewById(R.id.circle);
-        circle.setOnTouchListener(t);
+        circle_fb = (ImageView)findViewById(R.id.circle_wrapper);
+        socialFB = new SocialContainer(0,0, true, circle_fb);
+        socialFB.circle.setOnTouchListener(t);
 
     }
+
 
 
     View.OnTouchListener t = new View.OnTouchListener(){
@@ -39,34 +45,29 @@ public class MainActivity extends Activity {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (gestureDetector.onTouchEvent(event)) {
-                if(v.getId() == R.id.circle){
-                    Toast.makeText(getApplicationContext(), "Circle clicked", Toast.LENGTH_SHORT).show();
-                    //TODO: Circle got touched, add functionality for that case
-                }
+
+                //open dialog
+                DialogFragment newFragment = new SocialChooserFragment();
+                newFragment.show(getFragmentManager(), "profile_dialog");
+
                 return true;
             } else {
+
                 final int X = (int) event.getRawX();
                 final int Y = (int) event.getRawY();
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
 
-                        //Log.i("MAIN", "X: "+ X);
-                        //Log.i("MAIN", "Y: "+ Y);
+                        _xDelta = (int) (X - circle_fb.getTranslationX());
+                        _yDelta = (int) (Y - circle_fb.getTranslationY());
 
-                        //oldX = X;
-                        //oldY = Y;
-
-                        //Log.i("MAIN", "translationX: "+ circle.getTranslationX());
-                        //Log.i("MAIN", "translationY: "+ circle.getTranslationY());
-
-                        _xDelta = (int) (X - circle.getTranslationX());
-                        _yDelta = (int) (Y - circle.getTranslationY());
-
-                        //Log.i("MAIN", "x: "+ _xDelta);
-                        //Log.i("MAIN", "y: "+ _yDelta);
 
                         break;
                     case MotionEvent.ACTION_UP:
+                        //TODO: add animation
+                        //Reset position to center of screen
+                        circle_fb.setTranslationX(0);
+                        circle_fb.setTranslationY(0);
                         break;
                     case MotionEvent.ACTION_POINTER_DOWN:
                         break;
@@ -74,11 +75,8 @@ public class MainActivity extends Activity {
                         break;
                     case MotionEvent.ACTION_MOVE:
 
-                        //int diffX = oldX - X;
-                        //Log.i("MAIN", "action_move triggered: "+ diffX);
-
-                        circle.setTranslationX(X - _xDelta);
-                        circle.setTranslationY(Y - _yDelta);
+                        circle_fb.setTranslationX(X - _xDelta);
+                        circle_fb.setTranslationY(Y - _yDelta);
                         break;
                 }
 
@@ -86,6 +84,20 @@ public class MainActivity extends Activity {
             }
             }
     };
+
+    @Override
+    public void onDialogClick(int profileId) {
+        if(profileId == SOCIAL_FACEBOOK){
+            circle_fb.setImageResource(R.drawable.circle_fb);
+            //TODO: store in shared preferences
+        } else if(profileId == SOCIAL_TWITTER) {
+            circle_fb.setImageResource(R.drawable.circle_twitter);
+        } else if (profileId == SOCIAL_LINKEDIN){
+            circle_fb.setImageResource(R.drawable.circle_linkedin);
+        }
+    }
+
+
 
     private class SingleTapConfirm extends GestureDetector.SimpleOnGestureListener {
 

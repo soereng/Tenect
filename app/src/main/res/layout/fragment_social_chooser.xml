@@ -1,0 +1,24 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="de.tenect.tum.test.SocialChooserFragment">
+
+    <ImageView android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/circle_twitter"
+        android:id="@+id/circle_twitter"
+        android:layout_gravity="center_horizontal|top" />
+
+    <ImageView android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/circle_linkedin"
+        android:id="@+id/circle_linkedin"
+        android:layout_gravity="right|top" />
+
+    <ImageView android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/circle_fb"
+        android:id="@+id/circle_fb"
+        android:layout_gravity="left|top" />
+
+</FrameLayout>
